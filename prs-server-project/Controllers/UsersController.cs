@@ -20,6 +20,18 @@ namespace prs_server_project.Controllers
             _context = context;
         }
 
+        // Start added code for Login method
+        // GET: api/users/username/password // This line is from PrsDb-Specs file for PRS project
+        public User Login(string username, string password) {
+            return _context.Users
+                        .SingleOrDefault(x => x.Username == username
+                                            && x.Password == password); // These lines are from PRSLibrarySolution UsersController
+        }
+        // See PRSLibrarySolution Program.cs class for more code that may be applicable
+        // Use async and await
+        // See code in GET PUT POST and DELETE methods below
+        // End added code for Login method
+
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
