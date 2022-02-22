@@ -20,7 +20,6 @@ namespace prs_server_project.Controllers
             _context = context;
         }
 
-        // Start added code for Login method
         // GET: api/users/username/password
         [HttpGet("{username}/{password}")]
         public async Task<ActionResult<User>> Login(string username, string password) {
@@ -32,7 +31,6 @@ namespace prs_server_project.Controllers
             }
             return await users.FirstOrDefaultAsync();
         }
-        // End added code for Login method
 
         // GET: api/Users
         [HttpGet]

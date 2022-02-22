@@ -11,118 +11,54 @@ namespace prs_server_project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RequestsController : ControllerBase
-    {
+    public class RequestsController : ControllerBase {
         private readonly PrsDbContext _context;
 
-        public RequestsController(PrsDbContext context)
-        {
+        public RequestsController(PrsDbContext context) {
             _context = context;
         }
 
-        // Start added code
+        // PUT: api/requests/review/5
+        [HttpPut("review/{id}")]
+        public async Task<IActionResult> PutRequestReview(int id, Request request) {
+            if (request.Total <= 50) {
+                request.Status = "APPROVED";
+            } else {
+                request.Status = "REVIEW";
+            }
+            return await PutRequest(id, request);
+        }
 
-        //// RecalcualteRequestTotal(requestId) method
-        //// PUT: api/Requests/Recalc/5
-        //[HttpPut("recalc/{requestId}")]
-        //public async Task<IActionResult> RecalculateRequest(int requestId) {
-        //    var request = await _context.Requests
-        //                                .Include(x => x.RequestLines)
-        //                                .SingleOrDefaultAsync(x => x.Id == requestId);
+        // PUT: api/requests/approve/5
+        [HttpPut("approve/{id}")]
+        public async Task<IActionResult> PutRequestApprove(int id, Request request) {
 
-        //    var sum = request.RequestLines.Sum(x => x.Quantity * x.Price);
+            request.Status = "APPROVED";
 
-        //    request.Total = sum;
+            return await PutRequest(id, request);
+        }
 
-        //    await _context.SaveChangesAsync();
+        // PUT: api/requests/reject/5
+        [HttpPut("reject/{id}")]
+        public async Task<IActionResult> PutRequestReject(int id, Request request) {
 
-        //    return NoContent(); // These lines are from SalesWebApiSolution OrdersController
-        //}
-        //// Also see recalculate request total method in PRSLibrarySolution RequestlinesController
+            request.Status = "REJECTED";
 
-        //// Review(request) method
-        //// PUT: api/Requests/5/Review
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutRequestReview(int id, Request request) {
-        //    if (request.Total <= 50) {
-        //        request.Status = "APPROVED";
-        //    } else {
-        //        request.Status = "REVIEW";
-        //    }
+            return await PutRequest(id, request);
+        }
 
-        //    _context.Entry(request).State = EntityState.Modified;
+        // GET: api/requests/review/{userId}
+        [HttpGet("review/{userId}")]
+        public IEnumerable<Request> GetRequestsInReview(int userId) {
+            var requests = _context.Requests
+                                        .Where(x => x.Status == "REVIEW"
+                                                && x.UserId != userId)
+                                        .ToList();
+            return requests;
+        }
 
-        //    try {
-        //        await _context.SaveChangesAsync();
-        //    } catch (DbUpdateConcurrencyException) {
-        //        if (!RequestExists(id)) {
-        //            return NotFound();
-        //        } else {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        //// Approve(request) method
-        //// PUT: api/Requests/5/Approve
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutRequestApprove(int id, Request request) {
-
-        //    request.Status = "APPROVED";
-
-        //    _context.Entry(request).State = EntityState.Modified;
-
-        //    try {
-        //        await _context.SaveChangesAsync();
-        //    } catch (DbUpdateConcurrencyException) {
-        //        if (!RequestExists(id)) {
-        //            return NotFound();
-        //        } else {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        //// Reject(request) method
-        //// PUT: api/Requests/5/Reject
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutRequestReject(int id, Request request) {
-
-        //    request.Status = "REJECTED";
-
-        //    _context.Entry(request).State = EntityState.Modified;
-
-        //    try {
-        //        await _context.SaveChangesAsync();
-        //    } catch (DbUpdateConcurrencyException) {
-        //        if (!RequestExists(id)) {
-        //            return NotFound();
-        //        } else {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        //// GetReviews(userId) method
-        //// GET: api/Requests/Review/{userId}
-        //public IEnumerable<Request> GetRequestsInReview(int userId) {
-        //    var requests = _context.Requests
-        //                                .Where(x => x.Status == "REVIEW"
-        //                                        && x.UserId != userId)
-        //                                .ToList();
-        //    return requests; // These lines are from PRSLibrarySolution RequestsController
-        //}
-
-        // End added code
-
-        // GET: api/Requests
-        [HttpGet]
+       // GET: api/Requests
+       [HttpGet]
         public async Task<ActionResult<IEnumerable<Request>>> GetRequests()
         {
             return await _context.Requests.ToListAsync();
