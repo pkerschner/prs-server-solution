@@ -20,22 +20,19 @@ namespace prs_server_project.Controllers
             _context = context;
         }
 
-        //// Start added code for Login method
-        //// GET: api/Users/Username/Password // added URL from PrsDb-Specs file
-        //public async Task<ActionResult<User>> Login(string username, string password) {
-        //    var username = "User1";
-        //    var password = "user1pw";
-        //    var user = from u in _context.Users
-        //               where u.Username == username && u.Password == password
-        //               select u;
-        //    return await _context.Users
-        //                .SingleOrDefault(x => x.Username == username
-        //                                    && x.Password == password); // These lines are from PRSLibrarySolution UsersController
-        //}
-        //// See PRSLibrarySolution Program.cs class for more code that may be applicable
-        //// Use async and await
-        //// See code in GET PUT POST and DELETE methods below
-        //// End added code for Login method
+        // Start added code for Login method
+        // GET: api/users/username/password
+        [HttpGet("{username}/{password}")]
+        public async Task<ActionResult<User>> Login(string username, string password) {
+            var users = from u in _context.Users
+                       where u.Username == username && u.Password == password
+                       select u;
+            if(users.Count() == 0) {
+                return NotFound();
+            }
+            return await users.FirstOrDefaultAsync();
+        }
+        // End added code for Login method
 
         // GET: api/Users
         [HttpGet]
