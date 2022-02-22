@@ -21,60 +21,104 @@ namespace prs_server_project.Controllers
         }
 
         // Start added code
-        // RecalcualteRequestTotal(requestId) method
-        // PUT: api/Requests/Recalc/5
-        [HttpPut("recalc/{requestId}")]
-        public async Task<IActionResult> RecalculateRequest(int requestId) {
-            var request = await _context.Requests
-                                        .Include(x => x.RequestLines)
-                                        .SingleOrDefaultAsync(x => x.Id == requestId);
 
-            var sum = request.RequestLines.Sum(x => x.Quantity * x.Price);
+        //// RecalcualteRequestTotal(requestId) method
+        //// PUT: api/Requests/Recalc/5
+        //[HttpPut("recalc/{requestId}")]
+        //public async Task<IActionResult> RecalculateRequest(int requestId) {
+        //    var request = await _context.Requests
+        //                                .Include(x => x.RequestLines)
+        //                                .SingleOrDefaultAsync(x => x.Id == requestId);
 
-            request.Total = sum;
+        //    var sum = request.RequestLines.Sum(x => x.Quantity * x.Price);
 
-            await _context.SaveChangesAsync();
+        //    request.Total = sum;
 
-            return NoContent(); // These lines are from SalesWebApiSolution OrdersController
-        } // Also see recalculate request total method in RequestLinesController in PRSLibrarySolution project
+        //    await _context.SaveChangesAsync();
 
-        // Review(request) method
-        // PUT: api/requests/5/review // This line is from PrsDb-Specs file for PRS project
-        public void SetReview(Request request) {
-            if(request.Total <= 50) {
-                request.Status = "APPROVED";
-            } else {
-                request.Status = "REVIEW";
-            }
-            Change(request); // These lines are from PRSLibrarySolution RequestsController
-        }
-        // See PRSLibrarySolution Program.cs class for more code that may be applicable
-        // Use async and await
-        // See code in GET PUT POST and DELETE methods below
+        //    return NoContent(); // These lines are from SalesWebApiSolution OrdersController
+        //}
+        //// Also see recalculate request total method in PRSLibrarySolution RequestlinesController
 
-        // Approve(request) method
-        // PUT: api/requests/5/approve // This line is from PrsDb-Specs file for PRS project
-        public void SetApproved(Request request) {
-            request.Status = "APPROVED";
-            Change(request); // These lines are from PRSLibrarySolution RequestsController
-        }
+        //// Review(request) method
+        //// PUT: api/Requests/5/Review
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutRequestReview(int id, Request request) {
+        //    if (request.Total <= 50) {
+        //        request.Status = "APPROVED";
+        //    } else {
+        //        request.Status = "REVIEW";
+        //    }
 
-        // Reject(request) method
-        // PUT: api/requests/5/reject // This line is from PrsDb-Specs file for PRS project
-        public void SetRejected(Request request) {
-            request.Status = "REJECTED";
-            Change(request); // These lines are from PRSLibrarySolution RequestsController
-        }
+        //    _context.Entry(request).State = EntityState.Modified;
 
-        // GetReviews(userId) method
-        // GET: api/requests/review/{userId} // This line is from PrsDb-Specs file for PRS project
-        public IEnumerable<Request> GetRequestsInReview(int userId) {
-            var requests = _context.Requests
-                                        .Where(x => x.Status == "REVIEW"
-                                                && x.UserId != userId)
-                                        .ToList();
-            return requests; // These lines are from PRSLibrarySolution RequestsController
-        }
+        //    try {
+        //        await _context.SaveChangesAsync();
+        //    } catch (DbUpdateConcurrencyException) {
+        //        if (!RequestExists(id)) {
+        //            return NotFound();
+        //        } else {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
+
+        //// Approve(request) method
+        //// PUT: api/Requests/5/Approve
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutRequestApprove(int id, Request request) {
+
+        //    request.Status = "APPROVED";
+
+        //    _context.Entry(request).State = EntityState.Modified;
+
+        //    try {
+        //        await _context.SaveChangesAsync();
+        //    } catch (DbUpdateConcurrencyException) {
+        //        if (!RequestExists(id)) {
+        //            return NotFound();
+        //        } else {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
+
+        //// Reject(request) method
+        //// PUT: api/Requests/5/Reject
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutRequestReject(int id, Request request) {
+
+        //    request.Status = "REJECTED";
+
+        //    _context.Entry(request).State = EntityState.Modified;
+
+        //    try {
+        //        await _context.SaveChangesAsync();
+        //    } catch (DbUpdateConcurrencyException) {
+        //        if (!RequestExists(id)) {
+        //            return NotFound();
+        //        } else {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
+
+        //// GetReviews(userId) method
+        //// GET: api/Requests/Review/{userId}
+        //public IEnumerable<Request> GetRequestsInReview(int userId) {
+        //    var requests = _context.Requests
+        //                                .Where(x => x.Status == "REVIEW"
+        //                                        && x.UserId != userId)
+        //                                .ToList();
+        //    return requests; // These lines are from PRSLibrarySolution RequestsController
+        //}
+
         // End added code
 
         // GET: api/Requests
