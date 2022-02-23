@@ -49,11 +49,11 @@ namespace prs_server_project.Controllers
 
         // GET: api/requests/review/{userId}
         [HttpGet("review/{userId}")]
-        public IEnumerable<Request> GetRequestsInReview(int userId) {
-            var requests = _context.Requests
+        public async Task<ActionResult<IEnumerable<Request>>> GetRequestsInReview(int userId) {
+            var requests = await _context.Requests
                                         .Where(x => x.Status == "REVIEW"
                                                 && x.UserId != userId)
-                                        .ToList();
+                                        .ToListAsync();
             return requests;
         }
 
