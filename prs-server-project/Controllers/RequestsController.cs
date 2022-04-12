@@ -51,6 +51,7 @@ namespace prs_server_project.Controllers
         [HttpGet("review/{userId}")]
         public async Task<ActionResult<IEnumerable<Request>>> GetRequestsInReview(int userId) {
             var requests = await _context.Requests
+                                        .Include(x => x.User)
                                         .Where(x => x.Status == "REVIEW"
                                                 && x.UserId != userId)
                                         .ToListAsync();
