@@ -72,8 +72,10 @@ namespace prs_server_project.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
+
+                await RecalculateRequestTotal(requestLine.RequestId);
+
+            } catch (DbUpdateConcurrencyException)
             {
                 if (!RequestLineExists(id))
                 {
@@ -84,7 +86,6 @@ namespace prs_server_project.Controllers
                     throw;
                 }
             }
-            await RecalculateRequestTotal(requestLine.RequestId);
 
             return NoContent();
         }

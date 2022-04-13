@@ -17,7 +17,7 @@ namespace prs_server_project.Models {
         [StringLength(80)]
         public string RejectionReason { get; set; }
         [Required, StringLength(20)]
-        public string DelliveryMode { get; set; }
+        public string DeliveryMode { get; set; }
         [Required, StringLength(10)]
         public string Status { get; set; }
         [Column(TypeName = "decimal(11,2)")]
