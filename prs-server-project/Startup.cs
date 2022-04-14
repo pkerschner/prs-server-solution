@@ -23,8 +23,11 @@ namespace prs_server_project {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
             services.AddDbContext<PrsDbContext>(x => {
-                var connStr = Configuration.GetConnectionString("PrsDbContext");
-                x.UseSqlServer(connStr);
+                var connStrKey = "PrsDbContext"; // production
+#if DEBUG
+                connStrKey += (Environment.OSVersion.Platform == PlatformID.Win32NT) ? "Win" : "Mac";
+#endif
+                x.UseSqlServer(Configuration.GetConnectionString(connStrKey));
             });
             services.AddControllers();
             services.AddCors();
